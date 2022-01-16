@@ -1,0 +1,75 @@
+#include <LiquidCrystal.h>
+#include <Servo.h>
+Servo myservo;
+int pos = 0;
+int pinLdr = A0;
+int dataLdr = 0;
+int led = 13;
+int speaker = 7;
+int status = 1;
+const int rs=12,en=11,d4=5,d5=4,d6=3,d7=2;
+LiquidCrystal lcd(rs,en,d4,d5,d6,d7);
+void setup() {
+  // put your setup code here, to run once:
+  lcd.begin(16,2);
+  myservo.attach(9);
+
+   Serial.begin(9600);
+  pinMode(pinLdr,INPUT);
+  pinMode(led,OUTPUT);
+  pinMode(speaker,OUTPUT);
+
+  digitalWrite(button, HIGH);
+  
+  
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  
+  
+  dataLdr = analogRead(pinLdr);
+  Serial.print("Data LDR : ");
+  Serial.println(dataLdr);
+//  terang
+  if(dataLdr<=400){
+     
+    lcd.print("Selamat Pagi"); 
+    myservo.write(180);
+    delay(100);
+    
+    digitalWrite(led,0);
+
+    noTone(speaker); 
+    delay(1000);          
+    
+    }
+//  gelap
+    else{
+      lcd.print("Selamat Malam");
+      myservo.write(0);
+      delay(100);
+      digitalWrite(led,1);
+   
+      }
+
+
+      
+     lcd.clear();
+
+      if (status == 1){
+        tone(speaker,1000);
+        delay(500);
+        noTone(speaker); // Send 1KHz sound signal...
+        delay(500); 
+        tone(speaker,1000);
+        delay(700);
+        noTone(speaker); // Send 1KHz sound signal...
+        delay(700); 
+        tone(speaker,1000);
+        delay(1000);
+        noTone(speaker); // Send 1KHz sound signal...
+        delay(1000); 
+        status = 0;
+    }
+}
